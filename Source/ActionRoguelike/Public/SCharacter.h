@@ -21,6 +21,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
+	
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent * CameraComp;
 
@@ -31,7 +34,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
-	void Turn(float Value);
+
+	void MoveRight(float Value);
+
+	void PrimaryAttack();
 	
 public:
 	// Called every frame
