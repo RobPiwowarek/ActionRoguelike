@@ -7,6 +7,7 @@
 #include "SCharacter.generated.h"
 
 
+class USInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
 
@@ -21,14 +22,23 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
+	
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent * InteractionComponent;
 	
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent * CameraComp;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent * SpringArmComp;
+
+	FTimerHandle TimerHandle_PrimaryAttack;
+	float AttackDelay = 0.2f;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,6 +48,9 @@ protected:
 	void MoveRight(float Value);
 
 	void PrimaryAttack();
+	void PrimaryAttack_TimeElapsed();
+
+	void PrimaryInteract();
 	
 public:
 	// Called every frame
