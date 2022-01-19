@@ -1,14 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SCharacter.h"
+#include "ActionRoguelike/Gameplay/Public/SCharacter.h"
 
 #include "DrawDebugHelpers.h"
-#include "SInteractionComponent.h"
+#include "ActionRoguelike/Gameplay/Public/SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -34,7 +35,6 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -66,7 +66,36 @@ void ASCharacter::PrimaryAttack()
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, AttackDelay);
 }
 
+void ASCharacter::SecondaryAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_SecondaryAttack, this, &ASCharacter::SecondaryAttack_TimeElapsed, AttackDelay);
+}
+
+void ASCharacter::DashAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_Dash, this, &ASCharacter::DashAttack_TimeElapsed, AttackDelay);
+}
+
 void ASCharacter::PrimaryAttack_TimeElapsed()
+{
+	SpawnProjectileByClass(PrimaryProjectileClass);
+}
+
+void ASCharacter::SecondaryAttack_TimeElapsed()
+{
+	SpawnProjectileByClass(SecondaryProjectileClass);
+}
+
+void ASCharacter::DashAttack_TimeElapsed()
+{
+	SpawnProjectileByClass(DashProjectileClass);
+}
+
+void ASCharacter::SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass)
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	
@@ -75,6 +104,30 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
+	
+	// calc correction for shoot
+	FCollisionObjectQueryParams Params;
+	Params.AddObjectTypesToQuery(ECC_Visibility);
+
+	FCollisionQueryParams AdditionalParams;
+	AdditionalParams.AddIgnoredActor(this);
+
+	FVector End = CameraComp->GetComponentLocation() + CameraComp->GetComponentRotation().Vector() * 3000;
+	FHitResult Result;
+	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Result, CameraComp->GetComponentLocation(), End, Params, AdditionalParams);
+	FRotator FindLookAtRotation;
+
+	DrawDebugLine(GetWorld(), CameraComp->GetComponentLocation(), End, FColor::Blue, false, 5);
+	if (bBlockingHit) {
+		FindLookAtRotation = UKismetMathLibrary::FindLookAtRotation(SpawnTM.GetLocation(), Result.Location);
+	} else
+	{
+		FindLookAtRotation = UKismetMathLibrary::FindLookAtRotation(SpawnTM.GetLocation(), Result.TraceEnd);
+	}
+	// calc correction for shoot
+
+	SpawnTM = FTransform(FindLookAtRotation, HandLocation);
+	
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
 
@@ -87,7 +140,6 @@ void ASCharacter::PrimaryInteract()
 void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	
 	// -- Rotation Visualization -- //
 	const float DrawScale = 100.0f;
@@ -118,6 +170,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &ASCharacter::SecondaryAttack);
+	PlayerInputComponent->BindAction("DashAttack", IE_Pressed, this, &ASCharacter::DashAttack);
+	
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::Jump);
 }

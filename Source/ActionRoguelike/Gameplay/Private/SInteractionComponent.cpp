@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SInteractionComponent.h"
+#include "ActionRoguelike/Gameplay/Public/SInteractionComponent.h"
 
 #include "DrawDebugHelpers.h"
-#include "SGameplayInterface.h"
+#include "ActionRoguelike/Gameplay/Public/SGameplayInterface.h"
 
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()

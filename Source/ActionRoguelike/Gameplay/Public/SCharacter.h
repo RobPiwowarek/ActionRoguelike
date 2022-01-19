@@ -23,7 +23,13 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> PrimaryProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> SecondaryProjectileClass;
+	
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> DashProjectileClass;
 	
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
@@ -37,7 +43,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent * SpringArmComp;
 
-	FTimerHandle TimerHandle_PrimaryAttack;
+	FTimerHandle TimerHandle_PrimaryAttack, TimerHandle_SecondaryAttack, TimerHandle_Dash;
 	float AttackDelay = 0.2f;
 
 	// Called when the game starts or when spawned
@@ -48,9 +54,17 @@ protected:
 	void MoveRight(float Value);
 
 	void PrimaryAttack();
+	void SecondaryAttack();
+	void DashAttack();
+	
 	void PrimaryAttack_TimeElapsed();
+	void SecondaryAttack_TimeElapsed();
+	void DashAttack_TimeElapsed();
 
 	void PrimaryInteract();
+
+private:
+	void SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass);
 	
 public:
 	// Called every frame

@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "SExplosiveBarrel.h"
+#include "ActionRoguelike/Gameplay/Public/SExplosiveBarrel.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()
