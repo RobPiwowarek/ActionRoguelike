@@ -9,7 +9,7 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	StaticMesh->SetSimulatePhysics(true);
 	StaticMesh->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnHit);
 	StaticMesh->SetCollisionProfileName("PhysicsActor");
-	
+
 	RootComponent = StaticMesh;
 
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
@@ -18,13 +18,13 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	RadialForceComp->bImpulseVelChange = true;
 	RadialForceComp->bAutoActivate = false;
 	RadialForceComp->SetupAttachment(StaticMesh);
-	
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ASExplosiveBarrel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+                              FVector NormalImpulse, const FHitResult& Hit)
 {
 	RadialForceComp->FireImpulse();
 }
@@ -33,7 +33,6 @@ void ASExplosiveBarrel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 void ASExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -41,4 +40,3 @@ void ASExplosiveBarrel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-

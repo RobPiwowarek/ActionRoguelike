@@ -23,12 +23,12 @@ void USInteractionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 
 // Called every frame
-void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                           FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -77,9 +77,8 @@ void USInteractionComponent::PrimaryInteract()
 			}
 		}
 	}
-	
+
 	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
-	
+
 	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 10);
 }
-

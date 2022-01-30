@@ -10,6 +10,7 @@
 class USInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class USAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -21,27 +22,29 @@ public:
 	ASCharacter();
 
 protected:
-
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> PrimaryProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> SecondaryProjectileClass;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> DashProjectileClass;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	UPROPERTY(VisibleAnywhere)
-	USInteractionComponent * InteractionComponent;
-	
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent * CameraComp;
+	USInteractionComponent* InteractionComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent * SpringArmComp;
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USAttributeComponent* AttributeComponent;
 
 	FTimerHandle TimerHandle_PrimaryAttack, TimerHandle_SecondaryAttack, TimerHandle_Dash;
 	float AttackDelay = 0.2f;
@@ -56,7 +59,7 @@ protected:
 	void PrimaryAttack();
 	void SecondaryAttack();
 	void DashAttack();
-	
+
 	void PrimaryAttack_TimeElapsed();
 	void SecondaryAttack_TimeElapsed();
 	void DashAttack_TimeElapsed();
@@ -65,13 +68,11 @@ protected:
 
 private:
 	void SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass);
-	
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	
 };

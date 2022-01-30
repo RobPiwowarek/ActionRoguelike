@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SProjectileBase.h"
 #include "GameFramework/Actor.h"
 #include "SDashProjectile.generated.h"
 
@@ -12,44 +13,27 @@ class USphereComponent;
 class UParticleSystemComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ASDashProjectile : public AActor
+class ACTIONROGUELIKE_API ASDashProjectile : public ASProjectileBase
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASDashProjectile();
 
 protected:
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USphereComponent* SphereComp;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UProjectileMovementComponent * MovementComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystemComponent * EffectComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystemComponent * ExitEffectComp;
-
-	FTimerHandle TimerHandle_Teleport, TimerHandle_ProjectileLifetime;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
 	float Teleport_Delay;
-	bool bDestroyed = false;
-	
-	UFUNCTION(BlueprintNativeEvent)
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
-	void OnHit_Implementation(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float Detonate_Delay;
+
+	FTimerHandle TimerHandle_DelayedDetonate;
 
 	void Teleport_TimeElapsed();
+
+	virtual void Explode_Implementation() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };
