@@ -134,7 +134,7 @@ void ASCharacter::SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass)
 			TraceEnd = Result.ImpactPoint;
 		}
 
-		DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Blue, false, 5, 0, 5.0f);
+		//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Blue, false, 5, 0, 5.0f);
 
 		FRotator ProjectileRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
 		// calc correction for shoot
