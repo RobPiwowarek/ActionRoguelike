@@ -42,6 +42,7 @@ void ASDashProjectile::Teleport_TimeElapsed()
 	if (ensure(ActorToTeleport))
 	{
 		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
+		Destroy();
 	}
 }
 
@@ -50,5 +51,5 @@ void ASDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(TimerHandle_DelayedDetonate, this, &ASDashProjectile::Explode, Teleport_Delay);
+	GetWorldTimerManager().SetTimer(TimerHandle_DelayedDetonate, this, &ASDashProjectile::Explode, Detonate_Delay);
 }

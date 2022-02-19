@@ -46,12 +46,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USAttributeComponent* AttributeComponent;
 
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
+	
 	FTimerHandle TimerHandle_PrimaryAttack, TimerHandle_SecondaryAttack, TimerHandle_Dash;
 	float AttackDelay = 0.2f;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
+	
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);

@@ -16,7 +16,7 @@ ASMagicProjectile::ASMagicProjectile()
 void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor)
+	if (OtherActor && OtherActor != GetInstigator())
 	{
 		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
 			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
