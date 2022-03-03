@@ -21,6 +21,8 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
+	bool IsAtFullHealth();
+	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> PrimaryProjectileClass;
@@ -33,7 +35,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
-
+	
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UParticleSystem* CastingParticleEffect;
+	
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
 
@@ -45,6 +50,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USAttributeComponent* AttributeComponent;
+
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);

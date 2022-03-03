@@ -20,6 +20,15 @@ public:
 	// Sets default values for this actor's properties
 	ASMagicProjectile();
 
+	UPROPERTY(EditAnywhere)
+	UAudioComponent *AudioComponent;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase *ImpactSound;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> CameraShakeClass;
+
 protected:
 	virtual void OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 	// Called when the game starts or when spawned

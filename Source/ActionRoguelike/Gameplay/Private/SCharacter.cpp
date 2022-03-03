@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -17,7 +18,7 @@ ASCharacter::ASCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
@@ -30,13 +31,25 @@ ASCharacter::ASCharacter()
 	InteractionComponent = CreateDefaultSubobject<USInteractionComponent>("InteractionComponent");
 
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
-
+	
 	bUseControllerRotationYaw = false;
 }
 
-void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth,
-	float Delta)
+bool ASCharacter::IsAtFullHealth()
 {
+	if (AttributeComponent)
+	{
+		return AttributeComponent->GetMaxHealth() == AttributeComponent->GetHealth();
+	}
+	return false;
+}
+
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth,
+                                  float Delta)
+{
+	if (Delta < 0)
+		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+	
 	if (NewHealth <= 0.0f && Delta < 0.0f)
 	{
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -104,6 +117,7 @@ void ASCharacter::DashAttack()
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
+	UGameplayStatics::SpawnEmitterAttached(CastingParticleEffect, GetMesh(), "Muzzle_01");
 	SpawnProjectileByClass(PrimaryProjectileClass);
 }
 

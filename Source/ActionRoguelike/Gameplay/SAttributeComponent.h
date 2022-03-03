@@ -20,10 +20,23 @@ public:
 	// Sets default values for this component's properties
 	USAttributeComponent();
 
+	float GetHealth() const
+	{
+		return Health;
+	}
+
+	float GetMaxHealth() const
+	{
+		return MaxHealth;
+	}
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	float MaxHealth;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;
