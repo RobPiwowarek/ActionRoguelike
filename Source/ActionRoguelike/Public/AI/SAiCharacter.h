@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "SAiCharacter.generated.h"
 
+class UPawnSensingComponent;
+
 UCLASS()
 class ACTIONROGUELIKE_API ASAiCharacter : public ACharacter
 {
@@ -15,12 +17,11 @@ public:
 	// Sets default values for this character's properties
 	ASAiCharacter();
 
+	virtual void PostInitializeComponents() override;
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPawnSensingComponent* PawnSensingComponent;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
+	UFUNCTION()
+	void OnPawnSeen(APawn* Pawn);
 };
