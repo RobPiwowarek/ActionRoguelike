@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SAiCharacter.generated.h"
 
+class USAttributeComponent;
 class UPawnSensingComponent;
 
 UCLASS()
@@ -21,7 +22,10 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComponent;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USAttributeComponent* AttributeComponent;
+	
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 };

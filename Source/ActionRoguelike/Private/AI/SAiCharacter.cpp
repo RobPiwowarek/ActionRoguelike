@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "DrawDebugHelpers.h"
+#include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
@@ -14,6 +15,8 @@ ASAiCharacter::ASAiCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
+
+	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
 void ASAiCharacter::PostInitializeComponents()
