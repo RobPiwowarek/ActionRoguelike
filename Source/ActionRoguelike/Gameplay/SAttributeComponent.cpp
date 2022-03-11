@@ -50,3 +50,15 @@ bool USAttributeComponent::IsAlive() const
 	return Health > 0.0f;
 }
 
+bool USAttributeComponent::IsActorAlive(AActor* Actor)
+{
+	USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
+
+	if (AttributeComponent)
+	{
+		return AttributeComponent->IsAlive();
+	}
+
+	return false;
+}
+

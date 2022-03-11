@@ -54,5 +54,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const;
-		
+
+	UFUNCTION(BlueprintCallable)
+	static bool IsActorAlive(AActor * Actor);
 };

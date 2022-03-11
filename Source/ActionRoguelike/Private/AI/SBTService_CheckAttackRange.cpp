@@ -4,6 +4,7 @@
 #include "AI/SBTService_CheckAttackRange.h"
 
 #include "AIController.h"
+#include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -18,6 +19,7 @@ void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 		if (TargetActor)
 		{
 			AAIController* SelfController = OwnerComp.GetAIOwner();
+			
 			if (ensure(SelfController))
 			{
 				APawn* Pawn = SelfController->GetPawn();
