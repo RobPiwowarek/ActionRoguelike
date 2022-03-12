@@ -6,8 +6,10 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "DrawDebugHelpers.h"
+#include "SWorldUserWidget.h"
 #include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Perception/PawnSensingComponent.h"
 
 // Sets default values
@@ -35,6 +37,17 @@ void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 {
 	if (Delta < 0.0f)
 	{
+
+		if (ActiveHealthBar == nullptr)
+		{
+			ActiveHealthBar = CreateWidget<USWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+			if (ActiveHealthBar)
+			{
+				ActiveHealthBar->AttachedActor = this;
+				ActiveHealthBar->AddToViewport();
+			}	
+		}
+		
 		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
 
 		// just died

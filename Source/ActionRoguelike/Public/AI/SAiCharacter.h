@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SAiCharacter.generated.h"
 
+class USWorldUserWidget;
 class USAttributeComponent;
 class UPawnSensingComponent;
 
@@ -25,6 +26,12 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USAttributeComponent* AttributeComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI") 
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI") 
+	USWorldUserWidget* ActiveHealthBar;
 	
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
