@@ -49,7 +49,7 @@ void ASPowerUp::Interact_Implementation(APawn* InstigatorPawn)
 
 				if (AttributeComponent)
 				{
-					AttributeComponent->ApplyHealthChange(AmountRestored);
+					AttributeComponent->ApplyHealthChange(nullptr, AmountRestored);
 					SetActorHiddenInGame(true);
 					OnCooldown = true;
 					GetWorldTimerManager().SetTimer(TimerHandle_CooldownElapsed, this, &ASPowerUp::Cooldown_TimeElapsed,

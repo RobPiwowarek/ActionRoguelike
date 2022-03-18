@@ -6,6 +6,9 @@
 #include "DrawDebugHelpers.h"
 #include "ActionRoguelike/Gameplay/Public/SGameplayInterface.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(
+	TEXT("su.DebugDrawInteraction"), false, TEXT("Disable/Enable debug drawing"), ECVF_Cheat);
+
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
 {
@@ -78,7 +81,10 @@ void USInteractionComponent::PrimaryInteract()
 		}
 	}
 
-	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	if (CVarDebugDrawInteraction.GetValueOnGameThread())
+	{
+		FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 
-	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 10);
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 10);
+	}
 }

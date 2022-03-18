@@ -30,6 +30,12 @@ public:
 		return MaxHealth;
 	}
 
+	static USAttributeComponent* GetAttributes(AActor* Actor)
+	{
+		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
+
+		return AttributeComponent;
+	}
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
@@ -47,7 +53,7 @@ public:
 	FOnHealthChanged OnHealthChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* Instigator, float Delta);
 	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -57,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static bool IsActorAlive(AActor * Actor);
+
+	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* Instigator);
 };

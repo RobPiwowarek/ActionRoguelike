@@ -7,6 +7,7 @@
 #include "SCharacter.generated.h"
 
 
+class USActionComponent;
 class USInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -51,6 +52,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USAttributeComponent* AttributeComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USActionComponent* ActionComponent;
+	
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
 	
@@ -76,13 +80,20 @@ protected:
 
 	void PrimaryInteract();
 
+	void SprintStart();
+	void SprintStop();
 private:
 	void SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass);
 
 public:
+	virtual FVector GetPawnViewLocation() const override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	// character, controller, game mode, cheat manager (thats where exec only works)
+	UFUNCTION(Exec)
+	void HealSelf(float Amount);
 };

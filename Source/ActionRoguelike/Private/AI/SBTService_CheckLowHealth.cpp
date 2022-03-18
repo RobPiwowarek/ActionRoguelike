@@ -26,7 +26,7 @@ void USBTService_CheckLowHealth::TickNode(UBehaviorTreeComponent& OwnerComp, uin
 
 				if (ensure(AttributeComponent))
 				{
-					if (AttributeComponent->GetHealth() < AttributeComponent->GetMaxHealth() * 0.2)
+					if (AttributeComponent->GetHealth() < AttributeComponent->GetMaxHealth() * 0.5)
 					{
 						BlackboardComponent->SetValueAsBool(LowHealthKey.SelectedKeyName, true);
 					}

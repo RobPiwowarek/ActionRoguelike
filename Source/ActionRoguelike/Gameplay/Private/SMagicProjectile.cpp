@@ -2,6 +2,7 @@
 
 #include "ActionRoguelike/Gameplay/Public/SMagicProjectile.h"
 
+#include "SGameplayFunctionLibrary.h"
 #include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -26,13 +27,10 @@ void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 			UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, this->GetActorLocation(),
 			                                      this->GetActorRotation());
 		}
-		
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
-			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 
-		if (AttributeComponent)
+		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, 20.0f, Hit))
 		{
-			AttributeComponent->ApplyHealthChange(-20.0f);
+			Explode();
 		}
 	}
 

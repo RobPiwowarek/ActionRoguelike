@@ -10,6 +10,8 @@
 #include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 // Sets default values
@@ -28,8 +30,11 @@ void ASAiCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	PawnSensingComponent->OnSeePawn.AddDynamic(this, &ASAiCharacter::OnPawnSeen);
-	AttributeComponent->OnHealthChanged.AddDynamic(this, &ASAiCharacter::OnHealthChanged);
+	if (PawnSensingComponent != nullptr)
+		PawnSensingComponent->OnSeePawn.AddDynamic(this, &ASAiCharacter::OnPawnSeen);
+
+	if (AttributeComponent != nullptr)
+		AttributeComponent->OnHealthChanged.AddDynamic(this, &ASAiCharacter::OnHealthChanged);
 }
 
 void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth,
@@ -65,6 +70,10 @@ void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			// ragdoll
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
 			GetMesh()->SetCollisionProfileName("Ragdoll");
+
+			// after physics capsule stays in place even tho mesh moved, this prevents it from creating invisible walls.
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetCharacterMovement()->DisableMovement();
 			
 			// set lifespan
 			SetLifeSpan(10);

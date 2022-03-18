@@ -24,7 +24,7 @@ EBTNodeResult::Type USBTT_HealFull::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 
 		if (ensure(AttributeComponent))
 		{
-			AttributeComponent->ApplyHealthChange(AttributeComponent->GetMaxHealth());
+			AttributeComponent->ApplyHealthChange(nullptr, AttributeComponent->GetMaxHealth());
 			return EBTNodeResult::Succeeded;
 		}
 	}

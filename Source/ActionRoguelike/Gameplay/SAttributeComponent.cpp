@@ -3,6 +3,10 @@
 
 #include "SAttributeComponent.h"
 
+#include "SGameModeBase.h"
+
+static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplier"), 1.0f, TEXT("Global damage multiplier for attribute component"), ECVF_Cheat);
+
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
 {
@@ -23,22 +27,45 @@ void USAttributeComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 {
+	AActor* Actor = GetOwner();
+	
+	if (!Actor->CanBeDamaged() && Delta < 0.0f)
+	{
+		return false;
+	}
+	
 	const float OldHealth = Health;
+	if (Delta < 0.0f)
+	{
+		float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
+		Delta *= DamageMultiplier;
+	}
+		
 	Health = FMath::Clamp(Health + Delta, 0.0f, MaxHealth);
 
-	OnHealthChanged.Broadcast(nullptr, this, Health, Health - OldHealth);
-	
+	OnHealthChanged.Broadcast(Instigator, this, Health, Health - OldHealth);
+
+	if (Health - OldHealth < 0.0f && Health == 0.0f)
+	{
+		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+
+		if (GM)
+		{
+			GM->OnActorKilled(GetOwner(), Instigator);
+		}
+	}
+		
 	return true;
 }
 
 
 // Called every frame
-void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void USAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                         FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -52,7 +79,8 @@ bool USAttributeComponent::IsAlive() const
 
 bool USAttributeComponent::IsActorAlive(AActor* Actor)
 {
-	USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
+		Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
 
 	if (AttributeComponent)
 	{
@@ -62,3 +90,7 @@ bool USAttributeComponent::IsActorAlive(AActor* Actor)
 	return false;
 }
 
+bool USAttributeComponent::Kill(AActor* Instigator)
+{
+	return ApplyHealthChange(Instigator, -GetMaxHealth());
+}
