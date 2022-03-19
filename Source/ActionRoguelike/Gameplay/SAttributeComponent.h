@@ -8,15 +8,16 @@
 
 class ACTIONROGUELIKE_API USAttributeComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, USAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, USAttributeComponent*,
+                                              OwningComp, float, NewHealth, float, Delta);
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	
-public:	
+
+public:
 	// Sets default values for this component's properties
 	USAttributeComponent();
 
@@ -32,37 +33,38 @@ public:
 
 	static USAttributeComponent* GetAttributes(AActor* Actor)
 	{
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
+			Actor->GetComponentByClass(USAttributeComponent::StaticClass()));
 
 		return AttributeComponent;
 	}
-protected:
 
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float MaxHealth;
-	
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(AActor* Instigator, float Delta);
-	
+
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const;
 
 	UFUNCTION(BlueprintCallable)
-	static bool IsActorAlive(AActor * Actor);
+	static bool IsActorAlive(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable)
 	bool Kill(AActor* Instigator);

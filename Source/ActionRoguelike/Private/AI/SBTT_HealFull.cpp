@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
- 
+
 #include "AI/SBTT_HealFull.h"
 
 #include "AIController.h"
@@ -20,7 +20,8 @@ EBTNodeResult::Type USBTT_HealFull::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 			return EBTNodeResult::Failed;
 		}
 
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(Pawn->GetComponentByClass(USAttributeComponent::StaticClass()));
+		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
+			Pawn->GetComponentByClass(USAttributeComponent::StaticClass()));
 
 		if (ensure(AttributeComponent))
 		{

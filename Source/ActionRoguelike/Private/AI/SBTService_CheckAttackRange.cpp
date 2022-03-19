@@ -19,7 +19,7 @@ void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 		if (TargetActor)
 		{
 			AAIController* SelfController = OwnerComp.GetAIOwner();
-			
+
 			if (ensure(SelfController))
 			{
 				APawn* Pawn = SelfController->GetPawn();

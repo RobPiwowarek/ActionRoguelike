@@ -9,7 +9,7 @@
 // Sets default values
 ASPowerUp::ASPowerUp()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
@@ -26,16 +26,15 @@ void ASPowerUp::BeginPlay()
 void ASPowerUp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ASPowerUp::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (OnCooldown) return;
-	
+
 	if (InstigatorPawn)
 	{
-		ASCharacter *PlayerCharacter = Cast<ASCharacter>(InstigatorPawn);
+		ASCharacter* PlayerCharacter = Cast<ASCharacter>(InstigatorPawn);
 
 		if (PlayerCharacter)
 		{
@@ -45,7 +44,8 @@ void ASPowerUp::Interact_Implementation(APawn* InstigatorPawn)
 			}
 			else
 			{
-				USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(PlayerCharacter->GetComponentByClass(USAttributeComponent::StaticClass()));
+				USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(
+					PlayerCharacter->GetComponentByClass(USAttributeComponent::StaticClass()));
 
 				if (AttributeComponent)
 				{
@@ -53,10 +53,9 @@ void ASPowerUp::Interact_Implementation(APawn* InstigatorPawn)
 					SetActorHiddenInGame(true);
 					OnCooldown = true;
 					GetWorldTimerManager().SetTimer(TimerHandle_CooldownElapsed, this, &ASPowerUp::Cooldown_TimeElapsed,
-								Cooldown);
+					                                Cooldown);
 				}
 			}
-			
 		}
 	}
 }

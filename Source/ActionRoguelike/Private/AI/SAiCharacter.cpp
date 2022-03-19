@@ -17,12 +17,12 @@
 // Sets default values
 ASAiCharacter::ASAiCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	
+
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
@@ -38,11 +38,10 @@ void ASAiCharacter::PostInitializeComponents()
 }
 
 void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth,
-	float Delta)
+                                    float Delta)
 {
 	if (Delta < 0.0f)
 	{
-
 		if (ActiveHealthBar == nullptr)
 		{
 			ActiveHealthBar = CreateWidget<USWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
@@ -50,9 +49,9 @@ void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			{
 				ActiveHealthBar->AttachedActor = this;
 				ActiveHealthBar->AddToViewport();
-			}	
+			}
 		}
-		
+
 		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
 
 		// just died
@@ -74,7 +73,7 @@ void ASAiCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			// after physics capsule stays in place even tho mesh moved, this prevents it from creating invisible walls.
 			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			GetCharacterMovement()->DisableMovement();
-			
+
 			// set lifespan
 			SetLifeSpan(10);
 		}

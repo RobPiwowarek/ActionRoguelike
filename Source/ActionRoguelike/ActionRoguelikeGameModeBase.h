@@ -13,5 +13,4 @@ UCLASS()
 class ACTIONROGUELIKE_API AActionRoguelikeGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
 };

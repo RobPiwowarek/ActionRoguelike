@@ -11,8 +11,8 @@ UCLASS()
 class ACTIONROGUELIKE_API ASPowerUp : public AActor, public ISGameplayInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASPowerUp();
 
@@ -26,13 +26,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
 	float Cooldown = 10.0f;
 
 	FTimerHandle TimerHandle_CooldownElapsed;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

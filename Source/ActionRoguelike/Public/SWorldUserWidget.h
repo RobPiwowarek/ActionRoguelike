@@ -20,14 +20,13 @@ protected:
 	/// in ui designer it will be automatically filled if name is matching
 	UPROPERTY(meta = (BindWidget))
 	USizeBox* ParentSizeBox;
-	
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
-
 	UPROPERTY(EditAnywhere)
 	FVector WorldOffset;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	AActor* AttachedActor;
 };

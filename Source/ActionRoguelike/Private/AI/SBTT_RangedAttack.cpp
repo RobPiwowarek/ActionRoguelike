@@ -29,18 +29,18 @@ EBTNodeResult::Type USBTT_RangedAttack::ExecuteTask(UBehaviorTreeComponent& Owne
 		{
 			return EBTNodeResult::Failed;
 		}
-		
+
 		if (!USAttributeComponent::IsActorAlive(TargetActor))
 		{
 			return EBTNodeResult::Failed;
 		}
-		
+
 		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotation = Direction.Rotation();
 
 		MuzzleRotation.Pitch += FMath::RandRange(0.0f, MaxBulletSpread);
 		MuzzleRotation.Yaw += FMath::RandRange(0.0f, MaxBulletSpread);
-		
+
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Params.Instigator = MyPawn;

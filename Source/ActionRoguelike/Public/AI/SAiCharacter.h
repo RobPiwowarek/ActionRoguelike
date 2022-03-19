@@ -23,19 +23,19 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USAttributeComponent* AttributeComponent;
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI") 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI") 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	USWorldUserWidget* ActiveHealthBar;
-	
+
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
-	
+
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 };

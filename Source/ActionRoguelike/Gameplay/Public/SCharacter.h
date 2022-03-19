@@ -23,23 +23,14 @@ public:
 	ASCharacter();
 
 	bool IsAtFullHealth();
-	
-protected:
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> PrimaryProjectileClass;
 
+protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> SecondaryProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> DashProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim;
-	
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UParticleSystem* CastingParticleEffect;
-	
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
 
@@ -54,18 +45,17 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USActionComponent* ActionComponent;
-	
+
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
-	
-	FTimerHandle TimerHandle_PrimaryAttack, TimerHandle_SecondaryAttack, TimerHandle_Dash;
-	float AttackDelay = 0.2f;
+
+	FTimerHandle TimerHandle_SecondaryAttack, TimerHandle_Dash;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
-	
+
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
@@ -74,7 +64,6 @@ protected:
 	void SecondaryAttack();
 	void DashAttack();
 
-	void PrimaryAttack_TimeElapsed();
 	void SecondaryAttack_TimeElapsed();
 	void DashAttack_TimeElapsed();
 
@@ -82,8 +71,6 @@ protected:
 
 	void SprintStart();
 	void SprintStop();
-private:
-	void SpawnProjectileByClass(TSubclassOf<AActor> ProjectileClass);
 
 public:
 	virtual FVector GetPawnViewLocation() const override;
@@ -92,7 +79,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	// character, controller, game mode, cheat manager (thats where exec only works)
 	UFUNCTION(Exec)
 	void HealSelf(float Amount);

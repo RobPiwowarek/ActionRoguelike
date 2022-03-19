@@ -18,7 +18,7 @@ ASMagicProjectile::ASMagicProjectile()
 }
 
 void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+                                   FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
@@ -34,8 +34,8 @@ void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 		}
 	}
 
-	UGameplayStatics::PlayWorldCameraShake(this, CameraShakeClass, GetActorLocation(),  50.0f, 8000.0f, 0.1f);
-	
+	UGameplayStatics::PlayWorldCameraShake(this, CameraShakeClass, GetActorLocation(), 50.0f, 8000.0f, 0.1f);
+
 	Super::OnActorHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
 }
 
