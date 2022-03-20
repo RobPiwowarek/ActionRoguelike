@@ -68,4 +68,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool Kill(AActor* Instigator);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsFullHealth();
 };

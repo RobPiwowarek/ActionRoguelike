@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "DrawDebugHelpers.h"
+#include "SActionComponent.h"
 #include "SWorldUserWidget.h"
 #include "ActionRoguelike/Gameplay/SAttributeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -24,6 +25,7 @@ ASAiCharacter::ASAiCharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+	ActionComponent = CreateDefaultSubobject<USActionComponent>("ActionComponent");
 }
 
 void ASAiCharacter::PostInitializeComponents()

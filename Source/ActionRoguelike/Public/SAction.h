@@ -28,6 +28,9 @@ protected:
 
 	bool bIsRunning = false;
 public:
+	UPROPERTY(EditDefaultsOnly, Category="Tags")
+	bool bAutoStart = false;
+	
 	UFUNCTION(BlueprintCallable, Category="Action")
 	bool IsRunning() const;
 
@@ -37,7 +40,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category="Action")
 	void StartAction(AActor* Instigator);
 
-	UFUNCTION(BlueprintNativeEvent, Category="Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Action")
 	void StopAction(AActor* Instigator);
 
 	UPROPERTY(EditDefaultsOnly, Category="Action")

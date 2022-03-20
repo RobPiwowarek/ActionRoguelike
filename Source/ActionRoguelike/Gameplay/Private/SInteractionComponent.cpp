@@ -15,8 +15,86 @@ USInteractionComponent::USInteractionComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	TraceSphereRadius = 30.0f;
+	TraceDistance = 500;
+	CollisionChannel = ECC_WorldDynamic;
 	// ...
+}
+
+void USInteractionComponent::FindBestInteractable()
+{
+	FCollisionObjectQueryParams Params;
+	Params.AddObjectTypesToQuery(CollisionChannel);
+
+	AActor* Owner = GetOwner();
+
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+	FVector End = EyeLocation + (EyeRotation.Vector() * TraceDistance);
+
+	TArray<FHitResult> Hits;
+	// FHitResult Result;
+	// bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Result, EyeLocation, End, Params);
+
+	// if (Result.GetActor())
+	// {
+	// 	if (Result.GetActor()->Implements<USGameplayInterface>())
+	// 	{
+	// 		ISGameplayInterface::Execute_Interact(Result.GetActor(), Cast<APawn>(Owner));
+	// 	}
+	// }
+
+	FCollisionShape Shape;
+	Shape.SetSphere(TraceSphereRadius);
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, Params, Shape);
+
+	// clear ref before trying to fill
+	FocusedActor = nullptr;
+
+	for (FHitResult Hit : Hits)
+	{
+		if (Hit.GetActor())
+		{
+			if (Hit.GetActor()->Implements<USGameplayInterface>())
+			{
+				FocusedActor = Hit.GetActor();
+				break;
+			}
+		}
+	}
+
+	if (FocusedActor)
+	{
+		if (DefaultWidgetInstance == nullptr && ensure(DefaultWidgetClass))
+		{
+			DefaultWidgetInstance = CreateWidget<USWorldUserWidget>(GetWorld(), DefaultWidgetClass);
+		}
+
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->AttachedActor = FocusedActor;
+			if (!DefaultWidgetInstance->IsInViewport())
+			{
+				DefaultWidgetInstance->AddToViewport();
+			}
+		}
+	}
+	else
+	{
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->RemoveFromParent();
+		}
+	}
+
+	if (CVarDebugDrawInteraction.GetValueOnGameThread())
+	{
+		FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 10);
+	}
 }
 
 
@@ -35,56 +113,20 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	FindBestInteractable();
 	// ...
 }
 
 
 void USInteractionComponent::PrimaryInteract()
 {
-	FCollisionObjectQueryParams Params;
-	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
-
-	AActor* Owner = GetOwner();
-
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	FVector End = EyeLocation + (EyeRotation.Vector() * 1000);
-
-	TArray<FHitResult> Hits;
-	// FHitResult Result;
-	// bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Result, EyeLocation, End, Params);
-
-	// if (Result.GetActor())
-	// {
-	// 	if (Result.GetActor()->Implements<USGameplayInterface>())
-	// 	{
-	// 		ISGameplayInterface::Execute_Interact(Result.GetActor(), Cast<APawn>(Owner));
-	// 	}
-	// }
-
-	float Radius = 30.0f;
-	FCollisionShape Shape;
-	Shape.SetSphere(Radius);
-	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, Params, Shape);
-
-	for (FHitResult Hit : Hits)
+	if (FocusedActor == nullptr)
 	{
-		if (Hit.GetActor())
-		{
-			if (Hit.GetActor()->Implements<USGameplayInterface>())
-			{
-				ISGameplayInterface::Execute_Interact(Hit.GetActor(), Cast<APawn>(Owner));
-				break;
-			}
-		}
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor to interact.");
+		return;
 	}
 
-	if (CVarDebugDrawInteraction.GetValueOnGameThread())
-	{
-		FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	APawn* MyPawn = Cast<APawn>(GetOwner());
 
-		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 10);
-	}
+	ISGameplayInterface::Execute_Interact(FocusedActor, MyPawn);
 }

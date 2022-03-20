@@ -95,3 +95,8 @@ bool USAttributeComponent::Kill(AActor* Instigator)
 {
 	return ApplyHealthChange(Instigator, -GetMaxHealth());
 }
+
+bool USAttributeComponent::IsFullHealth()
+{
+	return Health == MaxHealth;
+}

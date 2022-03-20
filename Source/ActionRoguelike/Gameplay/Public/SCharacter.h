@@ -25,12 +25,6 @@ public:
 	bool IsAtFullHealth();
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> SecondaryProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> DashProjectileClass;
-
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
 

@@ -7,37 +7,43 @@
 #include "Public/SGameplayInterface.h"
 #include "SPowerUp.generated.h"
 
-UCLASS()
+class USphereComponent;
+
+UCLASS(Abstract)
 class ACTIONROGUELIKE_API ASPowerUp : public AActor, public ISGameplayInterface
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	ASPowerUp();
-
-	// Called when the game starts or when spawned
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
-
-	void Cooldown_TimeElapsed();
-
 protected:
-	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* BaseMesh;
+	UPROPERTY()
+	bool bIsActive;
+	
+	UPROPERTY(EditAnywhere, Category = "Powerup")
+	float RespawnTime;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
-	float Cooldown = 10.0f;
+	FTimerHandle TimerHandle_RespawnTimer;
 
-	FTimerHandle TimerHandle_CooldownElapsed;
+	UFUNCTION()
+	void ShowPowerup();
+
+	void HideAndCooldownPowerup();
+
+	void SetPowerupState(bool bNewIsActive);
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* SphereComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* MeshComp;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	float AmountRestored = 20.0f;
+	void Interact_Implementation(APawn* InstigatorPawn) override;
 
-	bool OnCooldown;
+	virtual FText GetInteractText_Implementation(APawn* InstigatorPawn);
+
+public:
+
+	ASPowerUp();
 };

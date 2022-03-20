@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SWorldUserWidget.h"
 #include "Components/ActorComponent.h"
 #include "SInteractionComponent.generated.h"
 
@@ -19,8 +20,28 @@ public:
 	USInteractionComponent();
 
 protected:
+
+	void FindBestInteractable();
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	AActor* FocusedActor;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TSubclassOf<USWorldUserWidget> DefaultWidgetClass;
+
+	UPROPERTY()
+	USWorldUserWidget* DefaultWidgetInstance;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	float TraceSphereRadius;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	float TraceDistance;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TEnumAsByte<ECollisionChannel> CollisionChannel;
 
 public:
 	// Called every frame
